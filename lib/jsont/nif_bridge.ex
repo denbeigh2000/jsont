@@ -1,7 +1,11 @@
 defmodule Jsont.NifBridge do
+  @so_exists File.exists?("priv/native/jsont_nif.so")
+
   use Rustler,
     otp_app: :jsont,
-    crate: "jsont_nif"
+    crate: "jsont_nif",
+    skip_compilation?: @so_exists,
+    load_from: {:jsont, "priv/native/jsont_nif"}
 
   @spec encode(term(), boolean(), boolean()) :: {:ok, String.t()} | {:error, any()}
   def encode(_value, _bigint_as_string, _skip_elixir_struct),
